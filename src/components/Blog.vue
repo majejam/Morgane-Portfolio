@@ -2,7 +2,10 @@
  <div class="blog">
   <transition name="scale" appear>
      <div transition="opacity" class="info">
-        <span class="return" @click="goHome()">home</span>
+         <div @click="goHome(page)" class="return_container">
+          <span class="return">Return</span>
+          <div class="hover_return"></div>
+        </div>
         <div class="flow">
           <span class="title">{{markers.info}}</span>
           <p class="para para1">{{markers.paragraphe_1}}</p>
@@ -12,7 +15,7 @@
   </transition>
     <div class="markerse">
       <transition name="big" appear>
-      <img class="image" v-bind:src="markers.image['sizes']['large']"  v-if="markers.image['sizes']">/>
+        <img class="image" v-bind:src="markers.image['sizes']['large']"  v-if="markers.image['sizes']">/>
       </transition>
     </div>
   <Templating :data="markers"></Templating>
@@ -29,6 +32,7 @@ import Templating from '@/components/partials/Template'
   data(){
     return {
       markers: [],
+      page: this.$route.params.home
     }
   },
   mounted () {
@@ -36,14 +40,33 @@ import Templating from '@/components/partials/Template'
     fetch(url)
       .then((r) => r.json())
       .then((res) => {
+        if (res === null) {
+          console.log('res : null');
+          next({ name: '404' });
+          next()
+        }
         this.markers = res
-        console.log(this.markers);
-        
+        document.body.style.position = 'relative'
         })
+      .catch(error => {
+        this.$router.push({name:'404'})
+      });
   },
     methods:{
-    goHome() {
-        this.$router.push({name:'Home'})
+    goHome(route) {
+      if(route == 'Home') {
+        console.log("Access with home url, redirecting to home");
+        this.$router.push({name: route})
+      }
+      else if (typeof(route) == "undefined"){
+        console.log("Access with direct url, redirecting to home");
+        this.$router.push({name: 'Home'})
+      }
+      else {
+        console.log("Access with category url, redirecting to category");
+        this.$router.push({path: `/category/${route}`})
+      }
+        
     }
   },
   components: {
@@ -69,11 +92,11 @@ import Templating from '@/components/partials/Template'
 }
 .info {
     position: absolute;
-    bottom: 0;
+    top: 0px;
     left: 0;
-    width: 800px;
-    height: 200px;
-    background: white;
+    width: 300px;
+    height: auto;
+    background: #F8F6ED;
     z-index: 2;
     display: flex;
     flex-flow: column nowrap;
@@ -86,18 +109,52 @@ import Templating from '@/components/partials/Template'
   width: 100%;
   text-align: left;
   justify-content: space-around;
+    flex-flow: column nowrap;
+    margin-bottom: 20px;
+}
+
+.return_container {
+  position: relative;
+  width: 300px;
+  height: 100px;
+  background: #F8F6ED;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: 2s ease-in-out all;
+  transform-origin: left;
+  margin-bottom: 20px;
+}
+
+.hover_return {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #8A1538;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: 0.3s ease-in-out all;
+  z-index: -1;
+}
+.return_container:hover .hover_return {
+  transform: scaleX(1);
 }
 
 .para {
-  width: 30%;
+  width: 80%;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 0.9em;
+  margin: 10px 10%;
 }
 
 .scale-enter-active {
-    animation: left 2s ease-in-out 0s 1 forwards;
+    animation: left 1s ease-in-out 0s 1 forwards;
 }
 
 .big-enter-active {
@@ -171,7 +228,13 @@ import Templating from '@/components/partials/Template'
 .moveInUp-leave-active .return{
     opacity: 0;
     transition-delay: 0s;
-  transition-duration: 0.5s;
+    transition-duration: 0.5s;
+}
+
+.moveInUp-enter-active .return{
+    opacity: 0;
+    transition-delay: 0s;
+    transition-duration: 0.5s;
 }
 
 .moveInUp-leave-active{
@@ -193,10 +256,21 @@ import Templating from '@/components/partials/Template'
 }
 
 .return {
-    transition: 1s ease-in-out all;
+    transition: 0.3s ease-in-out all;
     transition-delay: 0.2s;
-    opacity: 0;
+    color: black;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 900;
+    font-size: 2em;
 }
+
+.return_container:hover .return {
+  color: #F8F6ED;
+  transition-delay: 0s;
+  transition-duration: 0.3s;
+}
+
+
 
 .para1 {
     transition: 1s ease-in-out all;
@@ -212,9 +286,10 @@ import Templating from '@/components/partials/Template'
     font-size: 2em;
     opacity: 1;
     transition: 1s ease-in-out all;
-    transition-delay: 0s;
+    transition-delay: 0.3s;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 900;
+    margin: 0 10%;
 }
 
 @keyframes appear{

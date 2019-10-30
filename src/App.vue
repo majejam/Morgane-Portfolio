@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <transition name="moveInUp">
-      <keep-alive include="Home">
-        <router-view/>
+      <keep-alive include="Home" exclude="Category">
+        <router-view :key="$route.fullPath"/>
       </keep-alive>
     </transition>
   </div>
@@ -10,7 +10,23 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'App'
+}
+
+prod(false)
+
+function prod(bool) {
+    if(bool) {
+        console.log = function() {}
+
+        console.warn = function() {}
+        
+        console.timeEnd = function() {}
+        
+        console.time = function() {}
+
+        console.error = function() {}
+    }
 }
 </script>
 
@@ -22,6 +38,13 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.image_logo_red {
+      position: absolute;
+      width: 50px;
+      height: auto;
+      bottom: 30px;
 }
 .moveInUp-enter-active{
   animation: fadeIn 1s ease-in;
@@ -97,6 +120,7 @@ export default {
     margin: 0;
     padding: 0;
     font-family: 'Source Sans Pro', sans-serif;
+    background: #F8F6ED;
   }
 
   #app {

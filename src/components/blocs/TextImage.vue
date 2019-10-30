@@ -1,7 +1,6 @@
 <template>
   <div class="text-image-container">
-      <div class="text">
-        <span>{{ data_bloc['title'] }}</span>
+      <div class="text" v-html="data_bloc['title']">
       </div>
       <div class="image_container" v-if="data_bloc['image']['sizes']['medium_large']">
           <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']"/>
@@ -32,9 +31,8 @@ export default {
 
 .text{
     width: 50%;
-    font-size: 3em;
+    text-align: left;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 900;
 }
 
 .image_container {

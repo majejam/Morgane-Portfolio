@@ -10,6 +10,9 @@
         <div class="text-image" v-if="blocs['acf_fc_layout'] == 'marquee'">
             <Marquee :data_bloc="blocs"></Marquee>
         </div>
+          <div class="text-image" v-if="blocs['acf_fc_layout'] == 'texte'">
+            <TextComp :data_bloc="blocs"></TextComp>
+        </div>
     </div>
   </div>
  
@@ -19,18 +22,21 @@
 import TextImage from '@/components/blocs/TextImage'
 import FullSize from '@/components/blocs/FullSize'
 import Marquee from '@/components/blocs/Marquee'
+import TextComp from '@/components/blocs/TextPara'
+
 export default {
   name: 'Template',
   props: ['data'], 
   data () {
     return {
-      data: this.data,
+      msg: this.data,
     }
   },
   components: {
     'TextImage': TextImage,
     'FullSize': FullSize,
     'Marquee': Marquee,
+    'TextComp': TextComp,
   }
 }
 </script>

@@ -6,7 +6,7 @@
         <span class="logo-loader">ML</span>
         <div class="logo-loader-bar "></div>
       </div>
-       <img class="image_logo_red" src="static/logo_morgane_red.png" alt="logo red">
+      <img class="image_logo_red" src="../../static/logo_morgane_red.png" alt="logo red">
     </div>
     <div v-if="markers" class="container">
           <Header/>
@@ -25,14 +25,18 @@ import Header from '@/components/partials/Header'
 
 export default {
   name: 'Home',
+  error: false,
   data(){
     return {
       markers: [],
       slug_post: [],
+      error: false,
     }
   },
   mounted () {
-    fetch('https://www.thomaslacroix.fr/nouvo/index.php/wp-json/markers/v1/post')
+  },
+  activated () {
+      fetch('https://www.thomaslacroix.fr/nouvo/index.php/wp-json/markers/v1/category/' + this.$route.params.Pid)
       .then((r) => r.json())
       .then((res) => {
         this.markers = res.map(x => x.acf)
@@ -40,8 +44,7 @@ export default {
         let loading_finished = false;
         let number_image_loaded = 0;
         let length = this.markers.length;
-        let ratio_load = 0.5
-        document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
+        
         this.markers.forEach((marker, index) => {
           let objImg = new Image();
           objImg.src = marker['image']['sizes']['medium_large'];          
@@ -49,8 +52,7 @@ export default {
           /// do some work;
             number_image_loaded++
             console.log(Math.round((number_image_loaded/length) * 100) + '%');
-            ratio_load = ((number_image_loaded/length)/2) + 0.5
-            document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
+            document.querySelector('.logo-loader-bar').style.transform = `scaleX(${number_image_loaded/length})`
             if(number_image_loaded == length) {
               setTimeout(() => {
                 document.querySelector('.remover').style.transform = 'scaleY(1)'
@@ -60,7 +62,6 @@ export default {
                 });
                 let image = document.querySelector('.header')
                 let header = document.querySelector('.header')
-                if(header)
                 header.style.height = image.offsetWidth + "px";
                 setTimeout(() => {
                   document.querySelector('.logo-loader').style.opacity = '0'
@@ -83,14 +84,17 @@ export default {
   
 
         })
-      .catch(error => console.log('error is', error));
+      .catch(error => {
+        console.log('error is', this.error)
+        this.$router.push({name:'404'})
+      });
   },
   methods:{
     goTodetail(prodId) {
-      this.$router.push({name:'blog',params:{Pid:prodId, home:"home"}})
+      this.$router.push({name:'blog',params:{Pid:prodId}})
     },
     goToArticle(slug) {
-      this.$router.push({name:'blog', params:{Pid:slug, home:"Home"}})
+      this.$router.push({name:'blog', params:{Pid:slug, home:this.$route.params.Pid}})
     }
   },
   components: {
@@ -101,19 +105,16 @@ export default {
 
 document.body.style.position = 'fixed'
 
-
-
 window.addEventListener('resize', () => {
   let images = document.querySelectorAll('.markers')
   images.forEach(element => {
-    if(element)
     element.style.height = element.offsetWidth + "px";
   });
   
 })
 </script>
 
-<style scoped >
+<style scoped>
     .loader {
       position: fixed;
       top: 0;
@@ -132,6 +133,11 @@ window.addEventListener('resize', () => {
       width: 50px;
       height: auto;
       bottom: 30px;
+    }
+    .moveInUp-enter-active{
+      animation: fadeIn 1s ease-in;
+      animation-delay: 2s;
+      opacity: 0;
     }
     .loader_content {
       display: flex;

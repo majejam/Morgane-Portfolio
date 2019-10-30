@@ -17,25 +17,11 @@ export default {
       let container = document.querySelector('.marquee-container')
       let translate_offset = container.offsetWidth/2
       container.style.transform = `translateX(${-translate_offset}px)`
-      window.addEventListener( 'wheel', (_e) => {
-          if(!this.data_bloc['scroll_auto']) {
-            if (_e.deltaY > 0 && translate_offset < container.offsetWidth) {
-                translate_offset += 2
-            }
-            else if(_e.deltaY < 0 && translate_offset > 0){
-                translate_offset -= 2
-            }
-          }
-          else {
-            if (_e.deltaY > 0 && translate_offset > 0) {
-                translate_offset -= 2
-            }
-            else if(_e.deltaY < 0 && translate_offset < container.offsetWidth){
-                translate_offset += 2
-            }
-          }
 
-            container.style.transform = `translateX(${-translate_offset}px)`
+      window.addEventListener( 'scroll', (_e) => {
+          let delta = ((document.body.offsetHeight - window.innerHeight) - window.pageYOffset) / (document.body.offsetHeight - window.innerHeight)
+           
+          container.style.transform = `translateX(${-translate_offset + (delta * 500)}px)`
       }, false );
 
   },
@@ -61,6 +47,18 @@ export default {
     font-size: 20em;
     font-style: italic;
     padding-right: 10px;
+}
+
+.inner_span:nth-child(even){
+    color: #8A1538;
+    -webkit-text-stroke-color: #8A1538;
+    -webkit-text-stroke-width: 5px;
+}
+
+.inner_span:nth-child(odd){
+    color: transparent;
+    -webkit-text-stroke-color: #8A1538;
+    -webkit-text-stroke-width: 5px;
 }
 
 </style>
