@@ -36,7 +36,7 @@ export default {
   mounted () {
   },
   activated () {
-      fetch('https://www.thomaslacroix.fr/nouvo/index.php/wp-json/markers/v1/category/' + this.$route.params.Pid)
+      fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/category/' + this.$route.params.Pid)
       .then((r) => r.json())
       .then((res) => {
         this.markers = res.map(x => x.acf)

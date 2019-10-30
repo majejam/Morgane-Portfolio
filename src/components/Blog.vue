@@ -1,5 +1,10 @@
 <template>
  <div class="blog">
+  <div class="markerse">
+    <transition name="big" appear>
+      <img class="image" v-bind:src="markers.image['sizes']['large']"  v-if="markers.image['sizes']">/>
+    </transition>
+  </div>
   <transition name="scale" appear>
      <div transition="opacity" class="info">
          <div @click="goHome(page)" class="return_container">
@@ -13,11 +18,6 @@
         </div>
      </div>
   </transition>
-    <div class="markerse">
-      <transition name="big" appear>
-        <img class="image" v-bind:src="markers.image['sizes']['large']"  v-if="markers.image['sizes']">/>
-      </transition>
-    </div>
   <Templating :data="markers"></Templating>
  </div>
 
@@ -36,7 +36,7 @@ import Templating from '@/components/partials/Template'
     }
   },
   mounted () {
-    let url = 'https://www.thomaslacroix.fr/nouvo/index.php/wp-json/markers/v1/post/' + this.$route.params.Pid    
+    let url = 'https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post/' + this.$route.params.Pid    
     fetch(url)
       .then((r) => r.json())
       .then((res) => {
@@ -300,4 +300,38 @@ import Templating from '@/components/partials/Template'
     transform: 1;
   }
 }
+
+    @media only screen and (max-width: 1600px) {
+      .header {
+        width: 25%;
+      }
+    }
+
+    @media only screen and (max-width: 1400px) {
+      .header {
+        width: 33%;
+      }
+    }
+    
+    @media only screen and (max-width: 1000px) {
+    .header {
+        width: 50%;
+      }
+    }
+
+    @media only screen and (max-width: 600px) {
+      .info {
+        position: relative;
+        width: 100%;
+      }
+
+      .markerse {
+        height: 60vh;
+      }
+
+      .return_container {
+        width: 100%;
+        height: 60px;
+      }
+    }
 </style>

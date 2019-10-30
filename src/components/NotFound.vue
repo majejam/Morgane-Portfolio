@@ -2,10 +2,9 @@
   <div class="home-container">
     <div class="loader">
       <div class="loader_content">
-        <div class="remover"></div>
         <span class="logo-loader">Snap ! 404 not found, <router-link :to="{ name: 'Home'}">might wanna go home</router-link> ?</span>
-        <div class="logo-loader-bar "></div>
       </div>
+      <img class="image_logo_red" src="https://morganelapisardi.fr/static/logo_morgane_red.fr" alt="logo red">
     </div>
   </div>
 </template>
@@ -35,6 +34,12 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+    .image_logo_red {
+      position: absolute;
+      width: 50px;
+      height: auto;
+      bottom: 30px;
     }
     .moveInUp-enter-active{
       animation: fadeIn 1s ease-in;

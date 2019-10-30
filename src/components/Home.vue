@@ -32,7 +32,7 @@ export default {
     }
   },
   mounted () {
-    fetch('https://www.thomaslacroix.fr/nouvo/index.php/wp-json/markers/v1/post')
+    fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post')
       .then((r) => r.json())
       .then((res) => {
         this.markers = res.map(x => x.acf)
