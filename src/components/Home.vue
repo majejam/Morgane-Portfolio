@@ -59,7 +59,7 @@ export default {
                   if(element.offsetHeight == element.offsetWidth) {
                     setTimeout(() => {
                       clearInterval(interval)
-                    }, 1000);     
+                    }, 10000);     
                   }
                 });
               }, 200);

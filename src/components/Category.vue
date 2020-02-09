@@ -35,8 +35,8 @@ export default {
   },
   mounted () {
   },
-  activated () {
-      fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/category/' + this.$route.params.Pid)
+    activated () {
+    fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post')
       .then((r) => r.json())
       .then((res) => {
         this.markers = res.map(x => x.acf)
@@ -44,7 +44,8 @@ export default {
         let loading_finished = false;
         let number_image_loaded = 0;
         let length = this.markers.length;
-        
+        let ratio_load = 0.5
+        document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
         this.markers.forEach((marker, index) => {
           let objImg = new Image();
           objImg.src = marker['image']['sizes']['medium_large'];          
@@ -52,16 +53,25 @@ export default {
           /// do some work;
             number_image_loaded++
             console.log(Math.round((number_image_loaded/length) * 100) + '%');
-            document.querySelector('.logo-loader-bar').style.transform = `scaleX(${number_image_loaded/length})`
+            ratio_load = ((number_image_loaded/length)/2) + 0.5
+            document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
             if(number_image_loaded == length) {
-              setTimeout(() => {
-                document.querySelector('.remover').style.transform = 'scaleY(1)'
+              let interval = setInterval(() => {
                 let images = document.querySelectorAll('.markers')
                 images.forEach(element => {
                   element.style.height = element.offsetWidth + "px";
+                  if(element.offsetHeight == element.offsetWidth) {
+                    setTimeout(() => {
+                      clearInterval(interval)
+                    }, 10000);     
+                  }
                 });
+              }, 200);
+              setTimeout(() => {
+                document.querySelector('.remover').style.transform = 'scaleY(1)'
                 let image = document.querySelector('.header')
                 let header = document.querySelector('.header')
+                if(header)
                 header.style.height = image.offsetWidth + "px";
                 setTimeout(() => {
                   document.querySelector('.logo-loader').style.opacity = '0'
@@ -84,10 +94,7 @@ export default {
   
 
         })
-      .catch(error => {
-        console.log('error is', this.error)
-        this.$router.push({name:'404'})
-      });
+      .catch(error => console.log('error is', error));
   },
   methods:{
     goTodetail(prodId) {

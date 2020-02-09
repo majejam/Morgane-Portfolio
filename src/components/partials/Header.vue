@@ -4,16 +4,16 @@
       <router-link class="logo" :to="{ name: 'Home'}">Morgane Lapisardi</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_1" :to="{ path:'/category/motion' }" exact>Motion</router-link>
+      <router-link class="link delay_1 motion" :to="{ path:'/category/motion' }" exact>Motion</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_2" :to="{ path:'/category/illustration' }" exact>Illustration</router-link>
+      <router-link class="link delay_2 illustration" :to="{ path:'/category/illustration' }" exact>Illustration</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_3" :to="{ path:'/category/hobbies' }" exact>Hobbies</router-link>
+      <router-link class="link delay_3 hobbies" :to="{ path:'/category/hobbies' }" exact>Hobbies</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_4" :to="{ path:'/about' }" exact>About</router-link>
+      <router-link class="link delay_4 about" :to="{ path:'/about' }" exact>About</router-link>
     </div>
     <img class="image_logo delay_3" src="../../../static/logo_morgane.png" alt="">
   </div>
@@ -25,7 +25,8 @@
     data() {
       return {
         msg: 'ppnoonooo',
-        hello: 10
+        hello: 10,
+        currentPage: this.$router.currentRoute
       }
     },
     mounted() {
@@ -35,7 +36,8 @@
           header.style.height = header.offsetWidth + "px";
 
       }, 200);
-    }
+      
+    },
   }
 
   window.addEventListener('resize', () => {
@@ -85,7 +87,7 @@
     transition-duration: 0.4s;
   }
 
-  .logo::after {
+  .logo::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -98,10 +100,11 @@
     transition: 0.3s ease-in-out transform;
   }
 
-  .logo:hover::after {
+  .logo:hover::before {
     transform-origin: left;
     transform: scaleX(1);
   }
+  
 
   .link {
     font-family: 'Source Sans Pro', sans-serif;
@@ -149,6 +152,17 @@
   .link:hover::after {
     transform-origin: left;
     transform: scaleX(1);
+  }
+
+  .router-link-exact-active::after {
+    transform-origin: left;
+    transform: scaleX(1);
+    transition-delay: 0.8s;
+  }
+
+  .moveInUp-enter-active .router-link-exact-active::after {
+    transform-origin: right;
+    transform: scaleX(0);
   }
 
   .image_logo {

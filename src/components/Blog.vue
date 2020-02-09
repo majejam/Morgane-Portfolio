@@ -61,7 +61,6 @@
           }
           this.markers = res
           this.src = this.markers.image['sizes']['large']
-
           document.body.style.position = 'relative'
           setTimeout(() => {
             scroll = LUXY.init()
@@ -97,8 +96,7 @@
       },
       handleScroll(event) {
         let el = document.querySelector('.image_handler')
-        window.pageYOffset > 50 ? el.style.transform = "translateX(-50%) scale(0.8)" : el.style.transform =
-          "translateX(-50%) scale(1)";
+        window.pageYOffset > 50 ? el.classList.add('image_small') : el.classList.remove('image_small');
       }
     },
     components: {
@@ -130,6 +128,10 @@
     transform: translateX(-50%);
     transition: 0.4s ease-out all;
     transform-origin: bottom;
+  }
+
+  .image_small {
+    transform: translateX(-50%) scale(0.8);
   }
 
   .height {

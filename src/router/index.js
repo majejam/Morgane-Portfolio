@@ -15,7 +15,7 @@ export default new Router({
       name: 'Home',
       component: Home,
       meta: {
-        title: 'Home Page - Example App',
+        title: 'Morgane Lapisardi | home',
         metaTags: [
           {
             name: 'description',
