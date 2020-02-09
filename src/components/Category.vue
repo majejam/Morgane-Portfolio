@@ -136,9 +136,10 @@ window.addEventListener('resize', () => {
     }
     .moveInUp-enter-active{
       animation: fadeIn 1s ease-in;
-      animation-delay: 2s;
+      animation-delay: 1s;
       opacity: 0;
     }
+
     .loader_content {
       display: flex;
       justify-content: center;

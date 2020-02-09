@@ -3,13 +3,13 @@
     <div id="luxy">
       <div class="markerse">
         <transition name="big" appear>
-          <img class="image" v-bind:src="markers.image['sizes']['large']" v-if="markers.image['sizes']">/>
+          <img class="image image_handler" :src="src">
         </transition>
       </div>
       <transition name="scale" appear>
-        <div transition="opacity" class="info">
+        <div class="info">
           <div @click="goHome(page)" class="return_container">
-            <span class="return">Return</span>
+            <span class="return">x</span>
             <div class="hover_return"></div>
           </div>
           <div class="flow">
@@ -20,6 +20,12 @@
         </div>
       </transition>
       <Templating :data="markers"></Templating>
+      <div class="height">
+        <span>herllo</span>
+      </div>
+      <div>
+        <span>herllo</span>
+      </div>
     </div>
 
   </div>
@@ -35,11 +41,13 @@
     data() {
       return {
         markers: [],
-        page: this.$route.params.home
+        page: this.$route.params.home,
+        src: ""
       }
     },
     mounted() {
       let scroll
+      
       let url = 'https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post/' + this.$route.params.Pid
       fetch(url)
         .then((r) => r.json())
@@ -52,7 +60,12 @@
             next()
           }
           this.markers = res
+          this.src = this.markers.image['sizes']['large']
+
           document.body.style.position = 'relative'
+          setTimeout(() => {
+            scroll = LUXY.init()
+          }, 1000);
         })
         .catch(error => {
           this.$router.push({
@@ -60,17 +73,7 @@
           })
         });
 
-      setTimeout(() => {
-        scroll = LUXY.init()
-      }, 2000);
 
-      document.addEventListener('scroll', () => {
-        if (window.pageYOffset > 200) {
-          document.querySelector('.image').style.width = "80%"
-        } else {
-          document.querySelector('.image').style.width = "100%"
-        }
-      })
     },
     methods: {
       goHome(route) {
@@ -91,11 +94,19 @@
           })
         }
 
+      },
+      handleScroll(event) {
+        let el = document.querySelector('.image_handler')
+        window.pageYOffset > 50 ? el.style.transform = "translateX(-50%) scale(0.8)" : el.style.transform =
+          "translateX(-50%) scale(1)";
       }
     },
     components: {
       'Templating': Templating,
-    }
+    },
+    created() {
+      window.addEventListener('scroll', this.handleScroll);
+    },
   }
 
 </script>
@@ -113,16 +124,24 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    bottom: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     transition: 0.4s ease-out all;
+    transform-origin: bottom;
+  }
+
+  .height {
+    height: 1000px;
   }
 
   .info {
     position: absolute;
     top: 0px;
     left: 0;
-    width: 300px;
-    height: auto;
-    background: #F8F6ED;
+    width: 100%;
+    height: 100vh;
     z-index: 2;
     display: flex;
     flex-flow: column nowrap;
@@ -134,16 +153,36 @@
   .flow {
     display: flex;
     width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0%) skewY(0deg);
     text-align: left;
     justify-content: space-around;
     flex-flow: column nowrap;
-    margin-bottom: 20px;
+    padding: 10px 10%;
+    box-sizing: border-box;
+    background: #F8F6ED;
+    transition: 1s cubic-bezier(0, 1, 1, 1) all;
+    transform-origin: bottom;
+  }
+
+  .moveInUp-enter-active .flow{
+    transform: translate(-50%, 200%) skewY(7deg);
+  }
+
+  
+  .moveInUp-leave-active .flow {
+    transform: translate(-50%, 120%);
   }
 
   .return_container {
     position: relative;
-    width: 300px;
+    width: 100px;
     height: 100px;
+    position: absolute;
+    top: 0;
+    right: 0;
     background: #F8F6ED;
     display: flex;
     justify-content: center;
@@ -151,7 +190,7 @@
     cursor: pointer;
     z-index: 2;
     transition: 2s ease-in-out all;
-    transform-origin: left;
+    transform-origin: right;
     margin-bottom: 20px;
   }
 
@@ -163,7 +202,7 @@
     bottom: 0;
     background: #8A1538;
     transform: scaleX(0);
-    transform-origin: left;
+    transform-origin: right;
     transition: 0.3s ease-in-out all;
     z-index: -1;
   }
@@ -178,19 +217,19 @@
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
     font-size: 0.9em;
-    margin: 10px 10%;
+    margin: 10px 0;
   }
 
   .scale-enter-active {
-    animation: left 1s ease-in-out 0s 1 forwards;
+    /*animation: left 0.5s ease-in-out 0s 1 forwards;*/
   }
 
   .big-enter-active {
-    animation: bigger 2s ease-in-out 0s 1 forwards;
+    animation: bigger 1s ease-in-out 0s 1 forwards;
   }
 
   .big-leave-active {
-    animation: bigger 2s ease-in-out 0s 1 reverse;
+    animation: bigger 1s ease-in-out 0s 1 reverse;
   }
 
   @keyframes left {
@@ -205,11 +244,11 @@
 
   @keyframes bigger {
     0% {
-      transform: scale(1.2);
+      transform: scale(1.2) translateX(-50%);
     }
 
     100% {
-      transform: scaleX(1);
+      transform: scale(1) translateX(-50%);
     }
   }
 
@@ -230,11 +269,7 @@
   }
 
   .scale-leave-active {
-    transform: scale(0);
-  }
-
-  .moveInUp-leave-active .info {
-    transform: scaleX(0);
+    opacity: 0;
   }
 
   .moveInUp-leave-active .title {
@@ -268,11 +303,11 @@
   }
 
   .moveInUp-leave-active {
-    animation: moveInUp 2s ease-in;
+    animation: moveInUp 1s ease-in;
   }
 
   .moveInUp-enter-active {
-    animation: fadeIn 0.3s ease-in;
+    animation: fadeIn 1s ease-in;
     opacity: 0;
   }
 
@@ -304,23 +339,23 @@
 
 
   .para1 {
-    transition: 1s ease-in-out all;
-    transition-delay: 0.2s;
+    transition: 0.4s ease-in-out all;
+    transition-delay: 0.3s;
   }
 
   .para2 {
-    transition: 1s ease-in-out all;
+    transition: 0.4s ease-in-out all;
     transition-delay: 0.4s;
   }
 
   .title {
     font-size: 2em;
     opacity: 1;
-    transition: 1s ease-in-out all;
-    transition-delay: 0.3s;
+    transition: 0.4s ease-in-out all;
+    transition-delay: 0.2s;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 900;
-    margin: 0 10%;
+    color: #8A1538;
   }
 
   @keyframes appear {
@@ -353,17 +388,17 @@
 
   @media only screen and (max-width: 600px) {
     .info {
-      position: relative;
       width: 100%;
     }
 
     .markerse {
-      height: 60vh;
+      height: 80vh;
+      margin-bottom: 20vh;
     }
 
     .return_container {
-      width: 100%;
-      height: 60px;
+      width: 50px;
+      height: 50px;
     }
   }
 

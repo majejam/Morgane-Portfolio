@@ -1,7 +1,7 @@
 <template>
   <div class="fullSize-container">
       <div class="image_container" v-if="data_bloc['image']['sizes']['medium_large']">
-          <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']"/>
+          <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']" alt="fullsize"/>
       </div>
   </div>
 

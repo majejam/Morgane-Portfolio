@@ -49,7 +49,7 @@ function prod(bool) {
 }
 .moveInUp-enter-active{
   animation: fadeIn 0.5s ease-in;
-  animation-delay: 2s;
+  animation-delay: 1s;
   opacity: 0;
 }
 @keyframes fadeIn{

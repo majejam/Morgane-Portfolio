@@ -1,18 +1,11 @@
 <template>
   <div class="content">
     <div v-for="blocs of data.blocs" v-bind:key="blocs.id" class="container" >
-        <div class="text-image" v-if="blocs['acf_fc_layout'] == 'text_image'">
-            <TextImage :data_bloc="blocs"></TextImage>
-        </div>
-        <div class="text-image" v-if="blocs['acf_fc_layout'] == 'fullsize_image'">
-            <FullSize :data_bloc="blocs"></FullSize>
-        </div>
-        <div class="text-image" v-if="blocs['acf_fc_layout'] == 'marquee'">
-            <Marquee :data_bloc="blocs"></Marquee>
-        </div>
-          <div class="text-image" v-if="blocs['acf_fc_layout'] == 'texte'">
-            <TextComp :data_bloc="blocs"></TextComp>
-        </div>
+        <TextImage v-if="blocs['acf_fc_layout'] == 'text_image'" :data_bloc="blocs"></TextImage>
+        <FullSize v-if="blocs['acf_fc_layout'] == 'fullsize_image'" :data_bloc="blocs"></FullSize>
+        <Marquee v-if="blocs['acf_fc_layout'] == 'marquee'" :data_bloc="blocs"></Marquee>
+        <TextComp v-if="blocs['acf_fc_layout'] == 'texte'" :data_bloc="blocs"></TextComp>
+        <Galery v-if="blocs['acf_fc_layout'] == 'galery'" :data_bloc="blocs"></Galery>
     </div>
   </div>
  
@@ -23,6 +16,7 @@ import TextImage from '@/components/blocs/TextImage'
 import FullSize from '@/components/blocs/FullSize'
 import Marquee from '@/components/blocs/Marquee'
 import TextComp from '@/components/blocs/TextPara'
+import Galery from '@/components/blocs/Galery'
 
 export default {
   name: 'Template',
@@ -37,6 +31,7 @@ export default {
     'FullSize': FullSize,
     'Marquee': Marquee,
     'TextComp': TextComp,
+    'Galery': Galery,
   }
 }
 </script>

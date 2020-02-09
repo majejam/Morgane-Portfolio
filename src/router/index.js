@@ -4,7 +4,7 @@ import Home from '@/components/Home'
 import Blog from '@/components/Blog'
 import Category from '@/components/Category'
 import NotFound from '@/components/NotFound'
-
+import About from '@/components/About'
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +27,11 @@ export default new Router({
           }
         ]
       }
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/blog/:Pid',

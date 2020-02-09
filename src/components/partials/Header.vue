@@ -4,15 +4,18 @@
       <router-link class="logo" :to="{ name: 'Home'}">Morgane Lapisardi</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_1" :to="{ path:'/category/motion' }" exact>motion</router-link>
+      <router-link class="link delay_1" :to="{ path:'/category/motion' }" exact>Motion</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_2" :to="{ path:'/category/illustration' }" exact>illustration</router-link>
+      <router-link class="link delay_2" :to="{ path:'/category/illustration' }" exact>Illustration</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_3" :to="{ path:'/category/bric-a-brac' }" exact>bric-à-brac</router-link>
+      <router-link class="link delay_3" :to="{ path:'/category/hobbies' }" exact>Hobbies</router-link>
     </div>
-    <img class="image" src="static/logo_morgane.png" alt="">
+    <div class="overflow">
+      <router-link class="link delay_4" :to="{ path:'/about' }" exact>About</router-link>
+    </div>
+    <img class="image_logo delay_3" src="../../../static/logo_morgane.png" alt="">
   </div>
 </template>
 
@@ -126,6 +129,10 @@
     transition-delay: 0.3s;
   }
 
+  .delay_4 {
+    transition-delay: 0.4s;
+  }
+
   .link::after {
     content: "";
     position: absolute;
@@ -144,11 +151,13 @@
     transform: scaleX(1);
   }
 
-  .image {
+  .image_logo {
     position: absolute;
     width: 50px;
     height: auto;
-    bottom: 30px;
+    bottom: 20px;
+    opacity: 1;
+    transition: 1s ease-out opacity 1s;
   }
 
 
@@ -182,6 +191,10 @@
 
   .moveInUp-enter-active .link {
     transform: translateY(150%);
+  }
+
+  .moveInUp-enter-active .image_logo {
+    opacity: 0;
   }
 
 </style>
