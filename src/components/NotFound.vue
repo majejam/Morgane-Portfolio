@@ -4,7 +4,7 @@
       <div class="loader_content">
         <span class="logo-loader">Snap ! 404 not found, <router-link :to="{ name: 'Home'}">might wanna go home</router-link> ?</span>
       </div>
-      <img class="image_logo_red" src="https://morganelapisardi.fr/static/logo_morgane_red.fr" alt="logo red">
+      <img class="image_logo_red" src="https://morganelapisardi.fr/static/logo_morgane_red.png" alt="logo red">
     </div>
   </div>
 </template>

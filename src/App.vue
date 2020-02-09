@@ -9,6 +9,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'App'
 }
@@ -47,7 +48,7 @@ function prod(bool) {
       bottom: 30px;
 }
 .moveInUp-enter-active{
-  animation: fadeIn 1s ease-in;
+  animation: fadeIn 0.5s ease-in;
   animation-delay: 2s;
   opacity: 0;
 }
@@ -126,4 +127,9 @@ function prod(bool) {
   #app {
     margin: 0;
   }
+
+::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
 </style>

@@ -52,12 +52,19 @@ export default {
             ratio_load = ((number_image_loaded/length)/2) + 0.5
             document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
             if(number_image_loaded == length) {
-              setTimeout(() => {
-                document.querySelector('.remover').style.transform = 'scaleY(1)'
+              let interval = setInterval(() => {
                 let images = document.querySelectorAll('.markers')
                 images.forEach(element => {
                   element.style.height = element.offsetWidth + "px";
+                  if(element.offsetHeight == element.offsetWidth) {
+                    setTimeout(() => {
+                      clearInterval(interval)
+                    }, 1000);     
+                  }
                 });
+              }, 200);
+              setTimeout(() => {
+                document.querySelector('.remover').style.transform = 'scaleY(1)'
                 let image = document.querySelector('.header')
                 let header = document.querySelector('.header')
                 if(header)

@@ -41,11 +41,11 @@ export default {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
     margin-top: 20px;
+    justify-content: space-between;
 }
 
 p {
-    width: 40%;
-    margin-right: 5%;
+    width: 45%;
 }
 
 </style>

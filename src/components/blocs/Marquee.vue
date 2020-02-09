@@ -20,12 +20,13 @@ export default {
 
       window.addEventListener( 'scroll', (_e) => {
           let delta = ((document.body.offsetHeight - window.innerHeight) - window.pageYOffset) / (document.body.offsetHeight - window.innerHeight)
-           
+          //container.style.transform = `translateX(${-translate_offset + (delta * 500)}px)`
           container.style.transform = `translateX(${-translate_offset + (delta * 500)}px)`
+          
       }, false );
-
   },
 }
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
