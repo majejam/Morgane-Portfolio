@@ -14,7 +14,7 @@ export default {
   name: 'App'
 }
 
-prod(true)
+prod(false)
 
 function prod(bool) {
     if(bool) {

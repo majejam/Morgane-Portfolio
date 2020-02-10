@@ -185,7 +185,6 @@
   }
 
   .return_container {
-    position: relative;
     width: 100px;
     height: 100px;
     position: absolute;
