@@ -92,6 +92,12 @@ export default {
         })
       .catch(error => console.log('error is', error));
   },
+  activated() {
+    let images = document.querySelectorAll('.markers')
+    images.forEach(element => {
+      element.style.height = element.offsetWidth + "px";
+    });
+  },
   methods:{
     goTodetail(prodId) {
       this.$router.push({name:'blog',params:{Pid:prodId, home:"home"}})

@@ -88,6 +88,7 @@
       },
       handleScroll(event) {
         let el = document.querySelector('.image_handler')
+        if(el)
         window.pageYOffset > 50 ? el.classList.add('image_small') : el.classList.remove('image_small');
       }
     },
@@ -96,7 +97,7 @@
     },
     created() {
       window.addEventListener('scroll', this.handleScroll);
-    },
+    }
   }
 
 </script>

@@ -37,7 +37,6 @@ router.beforeEach((to, from, next) => {
     // We use this to track which meta tags we create, so we don't interfere with other ones.
     tag.setAttribute('data-vue-router-controlled', '');
 
-    console.log(tag);
     
 
     return tag;

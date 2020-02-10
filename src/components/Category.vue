@@ -36,7 +36,7 @@ export default {
   mounted () {
   },
     activated () {
-    fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post')
+    fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/category/' + this.$route.params.Pid)
       .then((r) => r.json())
       .then((res) => {
         this.markers = res.map(x => x.acf)
@@ -94,7 +94,11 @@ export default {
   
 
         })
-      .catch(error => console.log('error is', error));
+      .catch(error => {
+          this.$router.push({
+            name: '404'
+          })
+        });
   },
   methods:{
     goTodetail(prodId) {
@@ -142,7 +146,7 @@ window.addEventListener('resize', () => {
       bottom: 30px;
     }
     .moveInUp-enter-active{
-      animation: fadeIn 1s ease-in;
+      animation: fadeIn 0.3s ease-in;
       animation-delay: 1s;
       opacity: 0;
     }
