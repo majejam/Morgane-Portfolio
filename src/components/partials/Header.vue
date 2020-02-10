@@ -197,6 +197,10 @@
     .header {
       width: 100%;
     }
+
+    .image_logo {
+      bottom: 10px;
+    }
   }
 
   .moveInUp-enter-active .logo {

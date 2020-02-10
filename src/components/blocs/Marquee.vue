@@ -62,4 +62,21 @@ export default {
     -webkit-text-stroke-width: 5px;
 }
 
+
+  /* tablet */
+  @media only screen and (max-width: 1200px) {
+
+  }
+
+  /* mobile */
+  @media only screen and (max-width: 800px) {
+      .inner_span {
+          font-size: 5em;
+      }
+
+      p {
+            width: 100%;
+        }
+  }
+
 </style>

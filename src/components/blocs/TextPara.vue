@@ -40,12 +40,27 @@ export default {
     flex-flow: nowrap;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
-    margin-top: 20px;
     justify-content: space-between;
 }
 
 p {
     width: 45%;
 }
+
+  /* tablet */
+  @media only screen and (max-width: 1200px) {
+
+  }
+
+  /* mobile */
+  @media only screen and (max-width: 800px) {
+      .paragraphe {
+          flex-flow: column;
+      }
+
+      p {
+            width: 100%;
+        }
+  }
 
 </style>

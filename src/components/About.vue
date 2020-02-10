@@ -1,38 +1,53 @@
 <template>
   <div class="blog">
     <div id="luxy">
-      <img src="../../static/the_office.gif" alt="" class="image_follow">
-      
+      <img v-if="data" :src="data['gif']['sizes']['large'] " alt="gif that follows the mouse" class="image_follow">
       <canvas id="canvas"></canvas>
       <div @click="goHome(page)" class="return_container">
         <span class="return">x</span>
         <div class="hover_return"></div>
       </div>
-      <div class="about__container">
-        <div class="big_img"></div>
-        <span class="main__span">Salut ! je suis une jeune illustratrice & motion designeuse basée à Paris !</span>
-        <span class="background__span">About</span>
-
-        <div class="about__article">
-          <h2>à propos</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, molestiae laborum ea quaerat at quam quidem
-            iste corporis deserunt. Asperiores doloremque eos iure expedita, illo fuga. Vitae at dolorum aspernatur.</p>
-
-          <h2>Mes experiences</h2>
-          <span>2020 / ITECA</span><br>
-          <span>DESIGN</span>
-
-          <h2>Les liens utiles</h2>
-          <span>behance</span>
-          <span>dribbble</span>
-
+      <transition name="background" appear>
+        <div class="background__span">
+          <div class="overflow__span">
+            <span class="fill_span">About</span>
+          </div>
+          <span class="stroke_span">About</span>
         </div>
-      </div>
-      <div class="contact__container">
-        <div>
-          <span class="under_score">Contactez-moi !</span>
+      </transition>
+      <transition name="apparition" appear>
+        <div v-if="data" class="about__container">
+          <div class="big_img">
+            <img :src="data['image']['sizes']['large']" :alt="data['image']['alt']" class="image_para">
+          </div>
+          <span class="main__span" >{{ this.data['title'] }}</span>
+          <div class="about__article">
+            <h2>{{ this.data['about']['title'] }}</h2>
+            <p>{{ this.data['about']['text'] }}</p>
+            <h2 >{{ this.data['experiences']['title'] }}</h2>
+            <div v-for="experience of this.data['experiences']['experiences']" v-bind:key="experience.id" class="experience__container">
+              <div class="experience__name">
+                <span>{{ experience.name }}</span>
+                <span>{{ experience.year }}</span>
+              </div>
+              <span class="experience__type">{{ experience.work }}</span>
+            </div>
+            <a class="resume__link" :href="data['resume']['file']['url']" target="blank">{{ data['resume']['title'] }}
+            <img src="../../static/link.svg" alt="external link"></a>
+            <h2>{{ this.data['links']['title'] }}</h2>
+            <div v-for="link of this.data['links']['links']" v-bind:key="link.id" class="link__container">
+              <a :href="link.url" class="link__image" target="blank">
+                <img :src="link.logo['sizes']['large']" :alt="link.name">
+              </a>
+            </div>
+          </div>
+                  <div v-if="data" class="contact__container">
+          <div>
+            <a :href="this.data['cta'].mail " class="under_score">{{ this.data['cta'].name }}</a>
+          </div>
         </div>
-      </div>
+        </div>
+      </transition>
     </div>
   </div>
 
@@ -41,12 +56,16 @@
 <script>
   import LUXY from 'luxy.js'
   import AOS from 'aos'
+  import simpleParallax from 'simple-parallax-js';
 
   export default {
     name: 'about',
     data() {
       return {
         page: this.$route.params.home,
+        data: null,
+        about: [],
+        experiences: [],
         offset: 0,
         start: 0,
         el: '',
@@ -82,55 +101,86 @@
     mounted() {
       let scroll
       document.body.style.position = 'relative'
-      setTimeout(() => {
-        scroll = LUXY.init()
-        AOS.init();
-        this.el = document.querySelector('.main__span')
-        this.contact = document.querySelector('.under_score')
-        this.follow = document.querySelector('.image_follow')
-
-        this.contact.addEventListener('mouseenter', () => {
-          this.hover = true  
-          console.log('cc');
+      let url = 'https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/page/about'
+      fetch(url)
+        .then((r) => r.json())
+        .then((res) => {
+          if (res === null) {
+            console.log('res : null');
+            next({
+              name: '404'
+            });
+            next()
+          }
+          this.data = res
+          this.about = res['about']
+          document.body.style.position = 'relative'
           
+          this.executeOnMounted()
         })
+        .catch(error => {
+          this.$router.push({
+            name: '404'
+          })
+        });
 
-        this.contact.addEventListener('mouseleave', () => {
-          this.hover = false  
-        })
-        
-        this.update()
-      }, 1000);
-      this.canvas = document.querySelector('#canvas')
-      this.context = this.canvas.getContext('2d')
-      this.sizes.width = this.canvas.width = window.innerWidth
-      this.sizes.height = this.canvas.height = document.body.offsetHeight
-      this.pos.y = document.body.offsetHeight - 150
-      this.pos.endY = document.body.offsetHeight - 150
-      window.addEventListener('resize', this.resize);
-      window.addEventListener('click', (e) => {
-        this.pos.endX = e.pageX;
-        this.pos.endY = e.pageY;
-      });
-
-      window.addEventListener('mousedown', (e) => {
-        this.hold = true
-      });
-
-      window.addEventListener('mouseup', (e) => {
-        this.hold = false
-      });
-
-    
-      window.addEventListener('mousemove', (_event) =>
-        {
-            this.cursor.x = _event.pageX 
-            this.cursor.y = _event.pageY  
-            this.mouve = true
-        })
 
     },
     methods: {
+      setParallax() {
+        const image = document.querySelector('.image_para');
+        let simple = new simpleParallax(image, {
+          overflow: true,
+          scale: 1.3,
+          orientation: 'down'
+        });
+      },
+      executeOnMounted() {
+        setTimeout(() => {
+          scroll = LUXY.init()
+          AOS.init();
+          this.el = document.querySelector('.main__span')
+          this.contact = document.querySelector('.under_score')
+          this.follow = document.querySelector('.image_follow')
+
+          this.contact.addEventListener('mouseenter', () => {
+            this.hover = true
+          })
+
+          this.contact.addEventListener('mouseleave', () => {
+            this.hover = false
+          })
+
+          this.canvas = document.querySelector('#canvas')
+          this.context = this.canvas.getContext('2d')
+          this.sizes.width = this.canvas.width = window.innerWidth
+          this.sizes.height = this.canvas.height = document.body.offsetHeight
+          this.pos.y = document.body.offsetHeight - 150
+          this.pos.endY = document.body.offsetHeight - 150
+          this.setParallax()
+          this.update()
+        }, 1000);
+
+        window.addEventListener('resize', this.resize);
+        window.addEventListener('click', (e) => {
+          this.pos.endX = e.pageX;
+          this.pos.endY = e.pageY;
+        });
+
+        window.addEventListener('mousedown', (e) => {
+          this.hold = true
+        });
+
+        window.addEventListener('mouseup', (e) => {
+          this.hold = false
+        });
+
+        window.addEventListener('mousemove', (_event) => {
+          this.cursor.x = _event.pageX
+          this.cursor.y = _event.pageY
+          this.mouve = true
+        })
+      },
       goHome(route) {
         if (route == 'Home') {
           console.log("Access with home url, redirecting to home");
@@ -159,25 +209,29 @@
           this.el.style.transform = `translateX(-${this.start*2.5}px)`
         }
 
-        if(this.hold) {
+        if (this.hold) {
           this.pos.endX = this.cursor.x;
           this.pos.endY = this.cursor.y;
         }
 
-        if(this.mouve) {
-          this.imgPos.endX = this.cursor.x - 480
+        if (this.mouve) {
+
+          this.imgPos.endX = (this.cursor.x)
           this.imgPos.endY = this.cursor.y
 
           this.imgPos.x = this.lerp(this.imgPos.x, this.imgPos.endX, 0.05);
           this.imgPos.y = this.lerp(this.imgPos.y, this.imgPos.endY, 0.05);
-        }
 
-        if(this.hover) {
-          this.follow.style.opacity = 1
 
           this.follow.style.transform = `translate(${this.imgPos.x}px, ${this.imgPos.y}px)`
+
+
         }
-        else {
+
+        if (this.hover) {
+          this.follow.style.opacity = 1
+
+        } else {
           this.follow.style.opacity = 0
         }
 
@@ -234,12 +288,12 @@
   }
 
   #canvas {
-     position: absolute;
-     top: 0;
-     left: 0;
-     right: 0;
-     bottom: 0;
-   }
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 
   .return {
     transition: 0.3s ease-in-out all;
@@ -274,23 +328,30 @@
     height: auto;
     position: relative;
     display: flex;
+    flex-flow: wrap;
     justify-content: space-between;
     padding: 0 10%;
     box-sizing: border-box;
+    user-select: none;
   }
 
   .big_img {
     position: relative;
     margin-top: 100px;
-    width: 500px;
+    width: 40%;
     height: 700px;
-    background: grey;
     z-index: 1;
+  }
+
+  .big_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .main__span {
     position: absolute;
-    top: 50%;
+    top: 440px;
     left: 30%;
     font-weight: bold;
     color: #8A1538;
@@ -303,13 +364,45 @@
   .background__span {
     position: absolute;
     font-size: 50em;
-    left: 50%;
-    bottom: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
     color: transparent;
-    transform: translate(-50%, 30%) rotateZ(-10deg);
+    transform: translate(-10%, 40%) rotateZ(-10deg);
     -webkit-text-stroke: #8A1538 2px;
     opacity: 0.5;
     user-select: none;
+    z-index: 0;
+  }
+
+  .fill_span {
+    color: #8A1538;
+  }
+
+  .overflow__span {
+    overflow: hidden;
+    display: block;
+    height: 0%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 1s linear all;
+  }
+
+  .background-enter-active  {
+    animation: opacity_small 1s ease-in-out 0.1s 1 backwards;
+  }
+
+  .background-leave-active  {
+    animation: opacity_small 1s ease-in-out 0.1s 1 reverse;
+  }
+
+  .background-enter-active .overflow__span {
+    height: 100%;
+  }
+
+  .background-leave-active .overflow__span{
+    height: 0;
   }
 
   .about__article {
@@ -317,7 +410,84 @@
     width: 50%;
     padding-right: 10%;
     box-sizing: border-box;
-    margin-top: 500px;
+    margin-top: 600px;
+    z-index: 2;
+  }
+
+  .resume__link {
+    text-decoration: none;
+    color: #8A1538;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.3em;
+    padding-top: 40px;
+  }
+
+  .resume__link img{
+    width: 16px;
+    height: 16px;
+    padding-left: 10px;
+  }
+
+  .about__article p {
+    font-size: 1.1em;
+  }
+
+  .about__article h2 {
+    color: #8A1538;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.3em;
+    padding-top: 30px;
+  }
+
+  .experience__container {
+    width: 70%;
+    box-sizing: border-box;
+    padding: 10px 0;
+  }
+
+  .experience__name {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #2c3e50;
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+
+  .experience__type {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #2c3e50;
+    font-size: 1.2em;
+    padding-top: 5px;
+  }
+
+  .link__container{
+    display: flex;
+  }
+
+  .link__image {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    opacity: 0.5;
+    transition: 0.3s ease-in-out opacity;
+  }
+
+  .link__image:hover {
+    opacity: 1;
+  }
+
+  .link__image img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   .contact__container {
@@ -341,6 +511,7 @@
     cursor: pointer;
     mix-blend-mode: screen;
     user-select: none;
+    text-decoration: none;
   }
 
   .under_score::after {
@@ -366,8 +537,97 @@
   }
 
   .image_follow {
-    transition: 1s ease-out opacity;
+    transition: 0.3s ease-out opacity;
     opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .apparition-enter-active {
+    animation: opacity 1s ease-in-out 2s 1 backwards;
+  }
+
+  .apparition-leave-active {
+    animation: opacity 1s ease-in-out 0s 1 reverse;
+  }
+
+  @keyframes opacity {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes opacity_small {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 0.5;
+    }
+  }
+
+  /* tablet */
+  @media only screen and (max-width: 1200px) {
+    .big_img {
+      height: 500px;
+    }
+
+    .main__span {
+      top: 300px;
+      font-size: 2.5em;
+    }
+
+    .about__article {
+      margin-top: 400px;
+    }
+
+    .background__span {
+      font-size: 35em;
+    }
+  }
+
+  /* mobile */
+  @media only screen and (max-width: 800px) {
+    .about__container {
+      flex-flow: column wrap;
+    }
+
+    .big_img {
+      width: 70%;
+      height: 300px;
+    }
+
+    .under_score {
+      font-size: 2em;
+    }
+
+    .under_score::after {
+      height: 5px;
+    }
+
+    .main__span {
+      top: 420px;
+    }
+
+    .background__span {
+      font-size: 15em;
+    }
+
+    .experience__container {
+      width: 100%;
+    }
+
+    .about__article {
+      margin-top: 50px;
+      width: 100%;
+      padding: 0;
+    }
   }
 
 </style>

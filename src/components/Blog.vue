@@ -398,6 +398,14 @@
       width: 100%;
     }
 
+    .title {
+      font-size: 2em;
+    }
+
+    .para {
+      font-size: 0.8em;
+    }
+
     .markerse {
       height: 80vh;
       margin-bottom: 20vh;

@@ -64,6 +64,14 @@
     margin-left: 55%;
   }
 
+  /* tablet */
+  @media only screen and (max-width: 1200px) {
+    .galery__image {
+      width: 45%;
+      height: 400px;
+    }
+  }
+
   @media only screen and (max-width: 700px) {
     .galery__image {
       width: 45%;

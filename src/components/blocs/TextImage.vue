@@ -27,11 +27,14 @@ export default {
 .text-image-container {
     margin: 50px 10%;
     display: flex;
+    flex-flow: row-reverse;
 }
 
 .text{
     width: 50%;
     text-align: left;
+    padding-left: 10%;
+    box-sizing: border-box;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
@@ -45,4 +48,27 @@ export default {
     height: 100%;
     object-fit: cover;
 }
+
+  /* tablet */
+  @media only screen and (max-width: 1200px) {
+    .image_container {
+      height: 50vh;
+    }
+  }
+
+  /* mobile */
+  @media only screen and (max-width: 800px) {
+    .text-image-container {
+      flex-flow: column-reverse;
+    }
+
+    .text {
+      width: 100%;
+      padding-left: 0%;
+    }
+
+    .image_container {
+      width: 100%;
+    }
+  }
 </style>
