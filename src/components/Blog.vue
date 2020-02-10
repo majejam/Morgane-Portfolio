@@ -20,16 +20,8 @@
         </div>
       </transition>
       <Templating :data="markers"></Templating>
-      <div class="height">
-        <span>herllo</span>
-      </div>
-      <div>
-        <span>herllo</span>
-      </div>
     </div>
-
   </div>
-
 </template>
 
 <script>
@@ -109,6 +101,20 @@
 
 </script>
 <style scoped>
+  #luxy {
+    padding-bottom: 30px;
+  }
+
+  #luxy::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #8A1538;
+  }
+
   .markerse {
     position: relative;
     top: 0;
@@ -218,7 +224,7 @@
     margin: 0;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
-    font-size: 0.9em;
+    font-size: 1.1em;
     margin: 10px 0;
   }
 
@@ -351,7 +357,7 @@
   }
 
   .title {
-    font-size: 2em;
+    font-size: 3em;
     opacity: 1;
     transition: 0.4s ease-in-out all;
     transition-delay: 0.2s;

@@ -15,7 +15,7 @@ export default new Router({
       name: 'Home',
       component: Home,
       meta: {
-        title: 'Morgane Lapisardi | home',
+        title: 'Morgane Lapisardi | Home',
         metaTags: [
           {
             name: 'description',
@@ -31,22 +31,34 @@ export default new Router({
     {
       path: '/about',
       name: 'about',
-      component: About
+      component: About,
+      meta: {
+        title: 'Morgane Lapisardi | About',
+      }
     },
     {
       path: '/blog/:Pid',
       name: 'blog',
-      component: Blog
+      component: Blog,
+      meta: {
+        title: 'Morgane Lapisardi | Blog',
+      }
     },
     {
       path: '/category/:Pid',
       name: 'Category',
-      component: Category
+      component: Category,
+      meta: {
+        title: 'Morgane Lapisardi | Categorie',
+      }
     },
     {
       path: '/error/404',
       name: '404',
-      component: NotFound
+      component: NotFound,
+      meta: {
+        title: 'Morgane Lapisardi | Uh oh',
+      }
     },
     { path: '*', component: NotFound }
   ]
