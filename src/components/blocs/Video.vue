@@ -53,7 +53,7 @@
    width: 100%;
    height: 5px;
    background: #8A1538;
-   transform: scaleX(1);
+   transform: scaleX(0);
    transform-origin: left;
    transition: 0.4s linear transform;
  }
