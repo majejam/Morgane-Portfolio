@@ -6,6 +6,7 @@
         <Marquee v-if="blocs['acf_fc_layout'] == 'marquee'" :data_bloc="blocs"></Marquee>
         <TextComp v-if="blocs['acf_fc_layout'] == 'texte'" :data_bloc="blocs"></TextComp>
         <Galery v-if="blocs['acf_fc_layout'] == 'galery'" :data_bloc="blocs"></Galery>
+        <Video v-if="blocs['acf_fc_layout'] == 'video'" :data_bloc="blocs"></Video>
     </div>
   </div>
  
@@ -17,6 +18,7 @@ import FullSize from '@/components/blocs/FullSize'
 import Marquee from '@/components/blocs/Marquee'
 import TextComp from '@/components/blocs/TextPara'
 import Galery from '@/components/blocs/Galery'
+import Video from '@/components/blocs/Video'
 
 export default {
   name: 'Template',
@@ -32,6 +34,7 @@ export default {
     'Marquee': Marquee,
     'TextComp': TextComp,
     'Galery': Galery,
+    'Video': Video,
   }
 }
 </script>

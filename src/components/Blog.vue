@@ -52,6 +52,8 @@
             next()
           }
           this.markers = res
+          console.log(res);
+          
           this.src = this.markers.image['sizes']['large']
           document.body.style.position = 'relative'
           setTimeout(() => {
