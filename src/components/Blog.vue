@@ -3,7 +3,7 @@
     <div id="luxy">
       <div class="markerse">
         <transition name="big" appear>
-          <img class="image image_handler" :src="src">
+          <img class="image" ref="image_handler" :src="src">
         </transition>
       </div>
       <transition name="scale" appear>
@@ -88,9 +88,8 @@
 
       },
       handleScroll(event) {
-        let el = document.querySelector('.image_handler')
-        if(el)
-        window.pageYOffset > 50 ? el.classList.add('image_small') : el.classList.remove('image_small');
+        if(this.$refs.image_handler)
+        window.pageYOffset > 50 ? this.$refs.image_handler.classList.add('image_small') : this.$refs.image_handler.classList.remove('image_small');
       }
     },
     components: {

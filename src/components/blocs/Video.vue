@@ -1,7 +1,7 @@
 <template>
   <div class="video-container">
-      <video class="video__player" :src="data['video'].url" muted autoplay loop></video>
-      <div v-if="data['show_seekbar']" class="seek_bar"></div>
+      <video class="video__player" ref="video__player" :src="data['video'].url" muted autoplay loop></video>
+      <div v-if="data['show_seekbar']" class="seek_bar" ref="seek_bar"></div>
       <span>{{ data['legend'] }}</span>
   </div>
 </template>
@@ -14,25 +14,33 @@
     data() {
       return {
         data: this.data_bloc,
+        player: {
+          value: 0,
+          delta: 0,
+          seekbar: this.$refs.seek_bar,
+          video: this.$refs.video__player
+        }
+
       }
     },
     mounted() {
-      let video = document.querySelector('.video__player')
-      let seekbar = {
-        value: 0,
-        el: document.querySelector('.seek_bar')
-      }
-
-      video.addEventListener('timeupdate', () => {
+      this.player.seekbar = this.$refs.seek_bar
+      this.player.video = this.$refs.video__player
+      
+      this.player.video.addEventListener('timeupdate', () => {
         if(this.data['show_seekbar']) {
-          seekbar.value = Math.round(video.currentTime / video.duration * 10000)/10000
-          seekbar.el.style.transform = `scaleX(${seekbar.value})`
+          this.player.delta = this.player.video.currentTime /  this.player.video.duration
+          this.player.value = this.rounder(this.player.delta, 4) 
+          this.player.seekbar.style.transform = `scaleX(${this.player.value})`
         }
       })
 
     },
     methods: {
-
+      rounder(value, decimal) {
+        const divider = (Math.pow(10, decimal))
+        return Math.round(value * divider) / divider 
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="galery-container">
     <div v-for="(image, index) of data['images']" v-bind:key="image.id" :class="[getClass(index), 'galery__image']">
-      <img :src="image['image']['sizes']['large']" :alt="image['image']['alt']" class="images_parallax">
+      <img :src="image['image']['sizes']['large']" :alt="image['image']['alt']" ref="images_parallax">
     </div>
   </div>
 </template>
@@ -25,11 +25,20 @@
         return index % 2 ? "galery__image--right" : "galery__image--left"
       },
       setParallax() {
-        const images = document.querySelectorAll('.images_parallax');
-        let simple = new simpleParallax(images, {
-          overflow: true,
-          scale: 1.5
-        });
+        if (Array.isArray(this.$refs.images_parallax)) {
+          this.$refs.images_parallax.forEach(element => {
+            new simpleParallax(element, {
+              overflow: true,
+              scale: 1.5
+            });
+          });
+        } else {
+          new simpleParallax(this.$refs.images_parallax, {
+            overflow: true,
+            scale: 1.5
+          });
+        }
+
       }
     }
   }
@@ -51,7 +60,6 @@
     width: 100%;
     width: 45%;
     height: 600px;
-    overflow: hidden;
   }
 
   .galery__image img {

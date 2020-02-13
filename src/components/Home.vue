@@ -1,6 +1,5 @@
  <template>
    <div class="home-container">
-     <Canvas/>
      <Loader :data.sync="this.loader" @ended="hasLoaded" />
      <div v-if="markers" class="container">
        <Header />
