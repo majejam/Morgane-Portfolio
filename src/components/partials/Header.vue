@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" ref="header">
     <div class="overflow">
       <router-link class="logo" :to="{ name: 'Home'}">Morgane Lapisardi</router-link>
     </div>
@@ -7,7 +7,8 @@
       <router-link class="link delay_1 motion" :to="{ path:'/category/motion' }" exact>Motion</router-link>
     </div>
     <div class="overflow">
-      <router-link class="link delay_2 illustration" :to="{ path:'/category/illustration' }" exact>Illustration</router-link>
+      <router-link class="link delay_2 illustration" :to="{ path:'/category/illustration' }" exact>Illustration
+      </router-link>
     </div>
     <div class="overflow">
       <router-link class="link delay_3 hobbies" :to="{ path:'/category/hobbies' }" exact>Hobbies</router-link>
@@ -30,21 +31,20 @@
       }
     },
     mounted() {
+
+      window.addEventListener('resize', () => {
+        if (this.$refs.header)
+          this.$refs.header.style.height = this.$refs.header.offsetWidth + "px";
+      })
       let interval = setInterval(() => {
-        let header = document.querySelector('.header')
-        if (header)
-          header.style.height = header.offsetWidth + "px";
+
+        if (this.$refs.header)
+          this.$refs.header.style.height = this.$refs.header.offsetWidth + "px";
 
       }, 200);
-      
+
     },
   }
-
-  window.addEventListener('resize', () => {
-    let header = document.querySelector('.header')
-    if (header)
-      header.style.height = header.offsetWidth + "px";
-  })
 
 </script>
 
@@ -62,6 +62,8 @@
     box-sizing: border-box;
     color: #F8F6ED;
     position: relative;
+    user-select: none;
+    z-index: 101;
   }
 
   .overflow {
@@ -104,7 +106,7 @@
     transform-origin: left;
     transform: scaleX(1);
   }
-  
+
 
   .link {
     font-family: 'Source Sans Pro', sans-serif;

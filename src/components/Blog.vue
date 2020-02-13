@@ -39,7 +39,6 @@
     },
     mounted() {
       let scroll
-      
       let url = 'https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post/' + this.$route.params.Pid
       fetch(url)
         .then((r) => r.json())

@@ -1,269 +1,213 @@
  <template>
-  <div class="home-container">
-    <div class="loader">
-      <div class="loader_content">
-        <div class="remover"></div>
-        <span class="logo-loader">ML</span>
-        <div class="logo-loader-bar "></div>
-      </div>
-       <img class="image_logo_red" src="static/logo_morgane_red.png" alt="logo red">
-    </div>
-    <div v-if="markers" class="container">
-          <Header/>
-        <div v-for="(marker, index) of markers" v-bind:key="marker.id" class="markers" @click="goToArticle(slug_post[index])">
-            <div class="img-container" v-if="marker['image']['sizes']['medium_large']">
-              <img v-bind:src="marker['image']['sizes']['medium_large']" /> 
-            </div>
-        </div>
-    </div>
-  </div>
-</template>
-<script>
+   <div class="home-container">
+     <Canvas/>
+     <Loader :data.sync="this.loader" @ended="hasLoaded" />
+     <div v-if="markers" class="container">
+       <Header />
+       <div v-for="(marker, index) of markers" v-bind:key="marker.id" class="markers" ref="markers"
+         @click="goToArticle(slug_post[index])">
+         <div class="img-container" v-if="marker['image']['sizes']['medium_large']">
+           <img :src="marker['image']['sizes']['medium_large']" />
+         </div>
+       </div>
+     </div>
+   </div>
+ </template>
+ <script>
+   import Header from '@/components/partials/Header'
+   import Loader from '@/components/partials/Loader'
+   import Canvas from '@/components/partials/Canvas'
 
-import Card from '@/components/partials/Card'
-import Header from '@/components/partials/Header'
+   export default {
+     name: 'Home',
+     data() {
+       return {
+         markers: [],
+         slug_post: [],
+         loader: '',
+       }
+     },
+     mounted() {
+       window.addEventListener('resize', () => {
+         this.$refs.markers.forEach(element => {
+           if (element)
+             element.style.height = element.offsetWidth + "px";
+         });
+       })
 
-export default {
-  name: 'Home',
-  data(){
-    return {
-      markers: [],
-      slug_post: [],
-    }
-  },
-  mounted () {
-    fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post')
-      .then((r) => r.json())
-      .then((res) => {
-        this.markers = res.map(x => x.acf)
-        this.slug_post = res.map(x => x.slug)
-        let loading_finished = false;
-        let number_image_loaded = 0;
-        let length = this.markers.length;
-        let ratio_load = 0.5
-        document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
-        this.markers.forEach((marker, index) => {
-          let objImg = new Image();
-          objImg.src = marker['image']['sizes']['medium_large'];          
-          objImg.onload = function() {
-          /// do some work;
-            number_image_loaded++
-            console.log(Math.round((number_image_loaded/length) * 100) + '%');
-            ratio_load = ((number_image_loaded/length)/2) + 0.5
-            document.querySelector('.logo-loader-bar').style.transform = `scaleX(${ratio_load})`
-            if(number_image_loaded == length) {
-              let interval = setInterval(() => {
-                let images = document.querySelectorAll('.markers')
-                images.forEach(element => {
-                  element.style.height = element.offsetWidth + "px";
-                  if(element.offsetHeight == element.offsetWidth) {
-                    setTimeout(() => {
-                      clearInterval(interval)
-                    }, 10000);     
-                  }
-                });
-              }, 200);
-              setTimeout(() => {
-                document.querySelector('.remover').style.transform = 'scaleY(1)'
-                let image = document.querySelector('.header')
-                let header = document.querySelector('.header')
-                if(header)
-                header.style.height = image.offsetWidth + "px";
-                setTimeout(() => {
-                  document.querySelector('.logo-loader').style.opacity = '0'
-                  document.querySelector('.logo-loader-bar').style.opacity = '0'
-                  document.querySelector('.remover').style.transformOrigin = 'top'
-                  document.querySelector('.remover').style.transform = 'scaleY(0)'
-                }, 500);
-                setTimeout(() => {
-                  document.querySelector('.loader').style.opacity = '0'
-                  document.body.style.position = 'relative'
-                }, 1000);
-                setTimeout(() => {
-                  document.querySelector('.loader').style.display = 'none'
-                }, 2050);
-              }, 100); 
-              console.log("All elements loaded");
-            }
-          }
+       fetch('https://www.morganelapisardi.fr/backoffice/index.php/wp-json/markers/v1/post')
+         .then((r) => r.json())
+         .then((res) => {
+           this.markers = res.map(x => x.acf)
+           this.slug_post = res.map(x => x.slug)
+           let number_image_loaded = 0;
+           this.loader = 0.5
+           this.markers.forEach((marker, index) => {
+             let objImg = new Image();
+             objImg.src = marker['image']['sizes']['medium_large'];
+             objImg.onload = () => {
+               number_image_loaded++
+               this.loader = ((number_image_loaded / this.markers.length) / 2) + 0.5
+             }
+           });
+
+
+         })
+         .catch(error => console.log('error is', error));
+     },
+     activated() {
+       if(this.$refs.markers) {
+        this.$refs.markers.forEach(element => {
+          element.style.height = element.offsetWidth + "px";
         });
-  
+       }
+     },
+     methods: {
+       goTodetail(prodId) {
+         this.$router.push({
+           name: 'blog',
+           params: {
+             Pid: prodId,
+             home: "home"
+           }
+         })
+       },
+       goToArticle(slug) {
+         this.$router.push({
+           name: 'blog',
+           params: {
+             Pid: slug,
+             home: "Home"
+           }
+         })
+       },
+       hasLoaded(value) {
+         let interval = setInterval(() => {
+           this.$refs.markers.forEach(element => {
+             element.style.height = element.offsetWidth + "px";
+             if (element.offsetHeight == element.offsetWidth) {
+               setTimeout(() => {
+                 clearInterval(interval)
+               }, 10000);
+             }
+           });
+         }, 200);
+       }
+     },
+     components: {
+       'Header': Header,
+       'Loader': Loader,
+       'Canvas': Canvas,
+     }
+   }
+ </script>
 
-        })
-      .catch(error => console.log('error is', error));
-  },
-  activated() {
-    let images = document.querySelectorAll('.markers')
-    images.forEach(element => {
-      element.style.height = element.offsetWidth + "px";
-    });
-  },
-  methods:{
-    goTodetail(prodId) {
-      this.$router.push({name:'blog',params:{Pid:prodId, home:"home"}})
-    },
-    goToArticle(slug) {
-      this.$router.push({name:'blog', params:{Pid:slug, home:"Home"}})
-    }
-  },
-  components: {
-    'Card': Card,
-    'Header': Header,
-  }
-}
+ <style scoped>
 
-document.body.style.position = 'fixed'
+   .image_logo_red {
+     position: absolute;
+     width: 50px;
+     height: auto;
+     bottom: 30px;
+   }
+
+   #canvas {
+     mix-blend-mode: hard-light !important;
+   }
 
 
+   @keyframes left {
+     0% {
+       transform: scaleX(0);
+       transform-origin: left;
+     }
 
-window.addEventListener('resize', () => {
-  let images = document.querySelectorAll('.markers')
-  images.forEach(element => {
-    if(element)
-    element.style.height = element.offsetWidth + "px";
-  });
-  
-})
-</script>
+     49% {
+       transform: scaleX(1);
+       transform-origin: left;
+     }
 
-<style scoped >
-    .loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1000;
-      background: #F8F6ED;
-      transition: 1s ease-in-out all; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .image_logo_red {
-      position: absolute;
-      width: 50px;
-      height: auto;
-      bottom: 30px;
-    }
-    .loader_content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-flow: column nowrap;
-      position: relative;
-    }
-    .logo-loader {
-      font-family: 'Source Sans Pro', sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      font-size: 2em;
-      color: #8A1538;
-      position: relative;
-    }
+     51% {
+       transform: scaleX(1);
+       transform-origin: right;
+     }
 
-    .remover {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: #8A1538;
-      transform-origin: bottom;
-      transform: scaleY(0);
-      transition: 0.5s ease-in-out transform;
-    }
+     100% {
+       transform: scaleX(0);
+       transform-origin: right;
+     }
+   }
 
-    .logo-loader-bar {
-      height: 2px;
-      width: 100%;
-      background: #8A1538;
-      transition: 0.3s ease-in-out transform;
-      transform: scaleX(0);
-      transform-origin: left;
-      /*animation: left 2s ease-in-out 0s infinite forwards;*/
-    }
+   .home-container {
+     margin: 5px;
+   }
 
-    @keyframes left {
-      0%{
-        transform: scaleX(0);
-        transform-origin: left;
-      }
-      49%{
-        transform: scaleX(1);
-        transform-origin: left;
-      }
-      51%{
-        transform: scaleX(1);
-        transform-origin: right;
-      }
-      100%{
-        transform: scaleX(0);
-        transform-origin: right;
-      }
-    }
+   .container {
+     display: flex;
+     flex-flow: row wrap;
+   }
 
-    .home-container {
-      margin: 5px;
-    }
-    .container {
-      display: flex;
-      flex-flow: row wrap;
-    }
-    .markers {
-        width: 20%;
-        height: 300px;
-        cursor: pointer;
-        padding: 5px;
-        box-sizing: border-box;
-    }
-    .markers:hover img {
-        transform: scale(1.01);
-    }
-    .markers_inner {
-      height: 100%;
-    }
-    .logo {
-        width: 20%;
-        height: 300px;
-        cursor: pointer;
-        margin: 10px;
-        background: rebeccapurple;
-    }
-    .img-container {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform-origin: center;
-      transition: 0.3s ease-in-out all;
-    }
+   .markers {
+     width: 20%;
+     height: 300px;
+     cursor: pointer;
+     padding: 5px;
+     box-sizing: border-box;
+     user-select: none;
+   }
 
-    @media only screen and (max-width: 1600px) {
-      .markers {
-        width: 25%;
-      }
-    }
+   .markers:hover img {
+     transform: scale(1.01);
+   }
 
-    @media only screen and (max-width: 1400px) {
-      .markers {
-        width: 33%;
-      }
-    }
-    
-    @media only screen and (max-width: 1000px) {
-    .markers {
-        width: 50%;
-      }
-    }
+   .markers_inner {
+     height: 100%;
+   }
 
-    @media only screen and (max-width: 600px) {
-    .markers {
-        width: 100%;
-      }
-    }
-</style>
+   .logo {
+     width: 20%;
+     height: 300px;
+     cursor: pointer;
+     margin: 10px;
+     background: rebeccapurple;
+   }
+
+   .img-container {
+     width: 100%;
+     height: 100%;
+     overflow: hidden;
+   }
+
+   img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     transform-origin: center;
+     transition: 0.3s ease-in-out all;
+   }
+
+   @media only screen and (max-width: 1600px) {
+     .markers {
+       width: 25%;
+     }
+   }
+
+   @media only screen and (max-width: 1400px) {
+     .markers {
+       width: 33%;
+     }
+   }
+
+   @media only screen and (max-width: 1000px) {
+     .markers {
+       width: 50%;
+     }
+   }
+
+   @media only screen and (max-width: 600px) {
+     .markers {
+       width: 100%;
+     }
+   }
+
+ </style>

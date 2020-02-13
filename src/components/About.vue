@@ -1,8 +1,9 @@
 <template>
   <div class="blog">
     <div id="luxy">
-      <img v-if="data" :src="data['gif']['sizes']['large'] " alt="gif that follows the mouse" class="image_follow">
-      <canvas id="canvas"></canvas>
+      <img v-if="data" :src="data['gif']['sizes']['large'] " alt="gif that follows the mouse" class="image_follow"
+        ref="image_follow">
+      <Canvas />
       <div @click="goHome(page)" class="return_container">
         <span class="return">x</span>
         <div class="hover_return"></div>
@@ -18,14 +19,15 @@
       <transition name="apparition" appear>
         <div v-if="data" class="about__container">
           <div class="big_img">
-            <img :src="data['image']['sizes']['large']" :alt="data['image']['alt']" class="image_para">
+            <img :src="data['image']['sizes']['large']" :alt="data['image']['alt']" class="image_para" ref="parallax">
           </div>
-          <span class="main__span" >{{ this.data['title'] }}</span>
+          <span ref="main_span" class="main__span">{{ this.data['title'] }}</span>
           <div class="about__article">
             <h2>{{ this.data['about']['title'] }}</h2>
             <p>{{ this.data['about']['text'] }}</p>
-            <h2 >{{ this.data['experiences']['title'] }}</h2>
-            <div v-for="experience of this.data['experiences']['experiences']" v-bind:key="experience.id" class="experience__container">
+            <h2>{{ this.data['experiences']['title'] }}</h2>
+            <div v-for="experience of this.data['experiences']['experiences']" v-bind:key="experience.id"
+              class="experience__container">
               <div class="experience__name">
                 <span>{{ experience.name }}</span>
                 <span>{{ experience.year }}</span>
@@ -33,7 +35,7 @@
               <span class="experience__type">{{ experience.work }}</span>
             </div>
             <a class="resume__link" :href="data['resume']['file']['url']" target="blank">{{ data['resume']['title'] }}
-            <img src="../../static/link.svg" alt="external link"></a>
+              <img src="../../static/link.svg" alt="external link"></a>
             <h2>{{ this.data['links']['title'] }}</h2>
             <div v-for="link of this.data['links']['links']" v-bind:key="link.id" class="link__container">
               <a :href="link.url" class="link__image" target="blank">
@@ -41,11 +43,11 @@
               </a>
             </div>
           </div>
-                  <div v-if="data" class="contact__container">
-          <div>
-            <a :href="this.data['cta'].mail " class="under_score">{{ this.data['cta'].name }}</a>
+          <div v-if="data" class="contact__container">
+            <div>
+              <a :href="this.data['cta'].mail " class="under_score" ref="under_score">{{ this.data['cta'].name }}</a>
+            </div>
           </div>
-        </div>
         </div>
       </transition>
     </div>
@@ -57,7 +59,7 @@
   import LUXY from 'luxy.js'
   import AOS from 'aos'
   import simpleParallax from 'simple-parallax-js';
-
+  import Canvas from '@/components/partials/Canvas'
   export default {
     name: 'about',
     data() {
@@ -68,23 +70,11 @@
         experiences: [],
         offset: 0,
         start: 0,
-        el: '',
-        contact: '',
-        mouse: true,
         hover: false,
-        hold: false,
-        follow: '',
-        canvas: '',
-        context: '',
+        loop: '',
         sizes: {
           width: 0,
           height: 0
-        },
-        pos: {
-          x: 0,
-          y: 0,
-          endX: 100,
-          endY: 1000
         },
         imgPos: {
           x: 0,
@@ -113,9 +103,8 @@
             next()
           }
           this.data = res
-          this.about = res['about']
           document.body.style.position = 'relative'
-          
+
           this.executeOnMounted()
         })
         .catch(error => {
@@ -128,8 +117,7 @@
     },
     methods: {
       setParallax() {
-        const image = document.querySelector('.image_para');
-        let simple = new simpleParallax(image, {
+        let simple = new simpleParallax(this.$refs.parallax, {
           overflow: true,
           scale: 1.3,
           orientation: 'down'
@@ -139,41 +127,18 @@
         setTimeout(() => {
           scroll = LUXY.init()
           AOS.init();
-          this.el = document.querySelector('.main__span')
-          this.contact = document.querySelector('.under_score')
-          this.follow = document.querySelector('.image_follow')
 
-          this.contact.addEventListener('mouseenter', () => {
+          this.$refs.under_score.addEventListener('mouseenter', () => {
             this.hover = true
           })
 
-          this.contact.addEventListener('mouseleave', () => {
+          this.$refs.under_score.addEventListener('mouseleave', () => {
             this.hover = false
           })
 
-          this.canvas = document.querySelector('#canvas')
-          this.context = this.canvas.getContext('2d')
-          this.sizes.width = this.canvas.width = window.innerWidth
-          this.sizes.height = this.canvas.height = document.body.offsetHeight
-          this.pos.y = document.body.offsetHeight - 150
-          this.pos.endY = document.body.offsetHeight - 150
           this.setParallax()
           this.update()
         }, 1000);
-
-        window.addEventListener('resize', this.resize);
-        window.addEventListener('click', (e) => {
-          this.pos.endX = e.pageX;
-          this.pos.endY = e.pageY;
-        });
-
-        window.addEventListener('mousedown', (e) => {
-          this.hold = true
-        });
-
-        window.addEventListener('mouseup', (e) => {
-          this.hold = false
-        });
 
         window.addEventListener('mousemove', (_event) => {
           this.cursor.x = _event.pageX
@@ -205,17 +170,11 @@
       },
       update() {
         this.start = this.lerp(this.start, this.offset, 0.1)
-        if (Math.round(this.start) != this.offset) {
-          this.el.style.transform = `translateX(-${this.start*2.5}px)`
+        if (Math.round(this.start) != this.offset && this.$refs.main_span) {
+          this.$refs.main_span.style.transform = `translateX(-${this.start*2.5}px)`
         }
 
-        if (this.hold) {
-          this.pos.endX = this.cursor.x;
-          this.pos.endY = this.cursor.y;
-        }
-
-        if (this.mouve) {
-
+        if (this.mouve && this.$refs.image_follow) {
           this.imgPos.endX = (this.cursor.x)
           this.imgPos.endY = this.cursor.y
 
@@ -223,46 +182,28 @@
           this.imgPos.y = this.lerp(this.imgPos.y, this.imgPos.endY, 0.05);
 
 
-          this.follow.style.transform = `translate(${this.imgPos.x}px, ${this.imgPos.y}px)`
-
-
+          this.$refs.image_follow.style.transform = `translate(${this.imgPos.x}px, ${this.imgPos.y}px)`
         }
 
-        if (this.hover) {
-          this.follow.style.opacity = 1
+        if (this.hover && this.$refs.image_follow) {
+          this.$refs.image_follow.style.opacity = 1
 
         } else {
-          this.follow.style.opacity = 0
+          this.$refs.image_follow.style.opacity = 0
         }
 
-        this.contextUpdate()
-
-        requestAnimationFrame(this.update);
+        this.loop = requestAnimationFrame(this.update);
       },
       lerp(min, max, fraction) {
         return (max - min) * fraction + min;
-      },
-      drawBall(x, y, radius) {
-        this.context.beginPath();
-        this.context.fillStyle = '#8A1538';
-        this.context.arc(x, y, radius, 0, 2 * Math.PI, false);
-        this.context.fill();
-      },
-      contextUpdate() {
-        this.context.clearRect(0, 0, this.sizes.width, this.sizes.height);
-        this.drawBall(this.pos.x, this.pos.y, 50);
-        this.pos.x = this.lerp(this.pos.x, this.pos.endX, 0.1);
-        this.pos.y = this.lerp(this.pos.y, this.pos.endY, 0.1);
-      },
-      resize() {
-        this.sizes.width = this.canvas.width = window.innerWidth
-        this.sizes.height = this.canvas.height = document.body.offsetHeight
       },
     },
     created() {
       window.addEventListener('scroll', this.handleScroll);
     },
-    components: {},
+    components: {
+      'Canvas': Canvas
+    },
   }
 
 </script>
@@ -389,11 +330,11 @@
     transition: 1s linear all;
   }
 
-  .background-enter-active  {
+  .background-enter-active {
     animation: opacity_small 1s ease-in-out 0.1s 1 backwards;
   }
 
-  .background-leave-active  {
+  .background-leave-active {
     animation: opacity_small 1s ease-in-out 0.1s 1 reverse;
   }
 
@@ -401,7 +342,7 @@
     height: 100%;
   }
 
-  .background-leave-active .overflow__span{
+  .background-leave-active .overflow__span {
     height: 0;
   }
 
@@ -425,7 +366,7 @@
     padding-top: 40px;
   }
 
-  .resume__link img{
+  .resume__link img {
     width: 16px;
     height: 16px;
     padding-left: 10px;
@@ -467,7 +408,7 @@
     padding-top: 5px;
   }
 
-  .link__container{
+  .link__container {
     display: flex;
   }
 
@@ -484,7 +425,7 @@
     opacity: 1;
   }
 
-  .link__image img{
+  .link__image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
