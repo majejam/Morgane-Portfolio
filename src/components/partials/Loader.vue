@@ -1,5 +1,5 @@
 <template>
-  <div ref="loader" class="loader cc">
+  <div ref="loader" class="loader">
     <div class="loader_content">
       <div ref="remover" class="remover"></div>
       <span ref="logo_loader" class="logo-loader">ML</span>
@@ -14,12 +14,11 @@
     name: 'Loader',
     props: ['data'],
     watch: {
-      data: function (newVal, oldVal) { 
+      data: function () { 
         this.$refs.logo_loader_bar.style.transform = `scaleX(${this.data})`
         if (this.data == 1) {
             this.hasFinished()
             this.removeLoader()
-          console.log("All elements loaded");
         }
       }
     },
@@ -38,10 +37,9 @@
     methods: {
       hasFinished() {
         this.ended = true
-        this.$emit('ended', this.ended)
         this.endTime = new Date()
         this.elapsedTime = (this.endTime - this.startTime) / 1000
-        console.log('Loading took', this.elapsedTime, 'seconds');
+        this.$emit('ended', this.elapsedTime)
       },
       removeLoader() {
           setTimeout(() => {
@@ -73,6 +71,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    height: 100vh;
     z-index: 1000;
     background: #F8F6ED;
     transition: 1s ease-in-out all;

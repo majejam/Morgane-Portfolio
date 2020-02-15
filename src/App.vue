@@ -9,12 +9,23 @@
 </template>
 
 <script>
+import LUXY from 'luxy.js'
 
 export default {
-  name: 'App'
+  name: 'App',
+  watch:{
+    $route (to, from){
+      window.scrollTo(0, 0);
+    }
+  }, 
+  mounted() {
+    let scroll = LUXY.init({
+      wrapper: "#app"
+    }) 
+  }
 }
 
-prod(false)
+prod(true)
 
 function prod(bool) {
     if(bool) {

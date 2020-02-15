@@ -1,6 +1,6 @@
 <template>
   <div class="blog">
-    <div id="luxy">
+    <div>
       <img v-if="data" :src="data['gif']['sizes']['large'] " alt="gif that follows the mouse" class="image_follow"
         ref="image_follow">
       <Canvas />
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-  import LUXY from 'luxy.js'
   import AOS from 'aos'
   import simpleParallax from 'simple-parallax-js';
   import Canvas from '@/components/partials/Canvas'
@@ -125,7 +124,6 @@
       },
       executeOnMounted() {
         setTimeout(() => {
-          scroll = LUXY.init()
           AOS.init();
 
           this.$refs.under_score.addEventListener('mouseenter', () => {
@@ -189,7 +187,7 @@
           this.$refs.image_follow.style.opacity = 1
 
         } else {
-          this.$refs.image_follow.style.opacity = 0
+          if( this.$refs.image_follow ) this.$refs.image_follow.style.opacity = 0
         }
 
         this.loop = requestAnimationFrame(this.update);
