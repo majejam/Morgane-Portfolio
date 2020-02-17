@@ -66,7 +66,7 @@
     justify-content: space-around;
     flex-flow: column nowrap;
     padding: 10px 10%;
-    margin: 100px 0;
+    margin: 100px 0 20px 0;
     box-sizing: border-box;
     transition: 0.5s cubic-bezier(0.694, 0.0482, 0.335, 1) all;
     transform-origin: bottom;
