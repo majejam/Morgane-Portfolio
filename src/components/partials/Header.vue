@@ -169,9 +169,9 @@
 
   .image_logo {
     position: absolute;
-    width: 50px;
+    width: 30px;
     height: auto;
-    bottom: 10px;
+    bottom: 15px;
     opacity: 1;
     transition: 1s ease-out opacity 1s;
   }

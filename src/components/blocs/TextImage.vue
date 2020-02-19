@@ -2,7 +2,7 @@
   <div class="text-image-container">
       <div class="text" v-html="data_bloc['title']">
       </div>
-      <div class="image_container" v-if="data_bloc['image']['sizes']['medium_large']">
+      <div class="image_container" ref="image_container" v-if="data_bloc['image']['sizes']['medium_large']">
           <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']"/>
       </div>
   </div>
@@ -18,6 +18,9 @@ export default {
     return {
       hello: this.data_bloc,
     }
+  },
+  mounted() {
+    this.data_bloc['crop_image'] ? this.$refs.image_container.classList.add('crop') : this.$refs.image_container.classList.remove('crop')
   }
 }
 </script>
@@ -46,7 +49,11 @@ export default {
 .image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+}
+
+.crop .image{
+  object-fit: cover;
 }
 
   /* tablet */
