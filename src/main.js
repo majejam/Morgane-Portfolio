@@ -6,7 +6,6 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-console.log(router);
 
 router.beforeEach((to, from, next) => {
   // This goes through the matched routes from last to first, finding the closest route with a title.

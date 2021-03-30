@@ -57,7 +57,7 @@
     flex-flow: column nowrap;
     align-items: center;
     justify-content: center;
-    padding: 5px;
+    padding: 5px 5px 15px 5px;
     border: 5px solid #F8F6ED;
     box-sizing: border-box;
     color: #F8F6ED;
@@ -169,9 +169,9 @@
 
   .image_logo {
     position: absolute;
-    width: 50px;
+    width: 30px;
     height: auto;
-    bottom: 20px;
+    bottom: 15px;
     opacity: 1;
     transition: 1s ease-out opacity 1s;
   }
@@ -185,7 +185,7 @@
 
   @media only screen and (max-width: 1400px) {
     .header {
-      width: 33%;
+      width: 33.33333334%;
     }
   }
 

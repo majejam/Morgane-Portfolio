@@ -80,8 +80,8 @@
       contextUpdate() {
         this.context.clearRect(0, 0, this.sizes.width, this.sizes.height);
         this.drawBall(this.pos.x, this.pos.y, 50);
-        this.pos.x = this.lerp(this.pos.x, this.pos.endX, 0.1);
-        this.pos.y = this.lerp(this.pos.y, this.pos.endY, 0.1);
+        this.pos.x = this.lerp(this.pos.x, this.pos.endX, 0.05);
+        this.pos.y = this.lerp(this.pos.y, this.pos.endY, 0.05);
       },
       resize() {
         this.sizes.width = this.$refs.canvas.width = window.innerWidth

@@ -1,7 +1,7 @@
 <template>
-  <div class="fullSize-container">
+  <div class="Portrait-container">
       <div ref="image_container" class="image_container" v-if="data_bloc['image']['sizes']['medium_large']">
-          <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']" alt="fullsize"/>
+          <img class="image" v-bind:src="data_bloc['image']['sizes']['medium_large']" alt="Portrait"/>
       </div>
   </div>
 
@@ -10,7 +10,7 @@
 <script>
 
 export default {
-  name: 'FullSize',
+  name: 'Portrait',
   props: ['data_bloc'], 
   data () {
     return {
@@ -18,15 +18,14 @@ export default {
     }
   },
   mounted() {
-    this.data_bloc['crop_image'] ? this.$refs.image_container.classList.remove('no-crop') : this.$refs.image_container.classList.add('no-crop')
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.fullSize-container {
-    margin: 0;
+.Portrait-container {
+    margin: 0 10%;
 }
 
 .image_container {
@@ -37,11 +36,8 @@ export default {
 img {
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
-.no-crop {
-  height: auto;
-}
 
 </style>

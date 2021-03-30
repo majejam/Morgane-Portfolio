@@ -37,6 +37,7 @@
            .Pid)
          .then((r) => r.json())
          .then((res) => {
+           this.error = false
            this.markers = res.map(x => x.acf)
            this.slug_post = res.map(x => x.slug)
            let number_image_loaded = 0;
@@ -53,12 +54,19 @@
            });
          })
          .catch(error => {
+           this.error = true
            this.$router.push({
              name: '404'
            })
          });
      },
      activated() {
+       if(this.error) {
+          this.$router.push({
+            name: '404'
+          })
+       }
+       
        if(this.$refs.markers) {
         this.$refs.markers.forEach(element => {
           element.style.height = element.offsetWidth + "px";

@@ -31,6 +31,10 @@
  </script>
 
  <style scoped>
+    .home-container {
+      height: 100vh;
+    }
+    
    .loader {
      position: fixed;
      top: 0;
